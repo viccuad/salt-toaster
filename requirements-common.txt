@@ -5,3 +5,4 @@ pycrypto==2.6.1
 pytest==2.9.2
 PyYAML==3.11
 rpdb
+jsonschema==2.5.1
