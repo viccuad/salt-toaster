@@ -18,6 +18,7 @@ before_install:
 - tar xvfz sandbox.tar.gz > /dev/null
 - source sandbox/bin/activate
 - sandbox/bin/pip install -r requirements.txt --exists-action w --upgrade
+- sandbox/bin/pip install websocket
 - BUILD_OPTS=--nopull make build_image
 
 script: make $TARGET PYTEST_CFG=$PYTEST_CFG
