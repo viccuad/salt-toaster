@@ -31,8 +31,14 @@ def retry(func):
     return success
 
 
-def build_docker_image(nocache=False, pull=True):
+def build_docker_image(nocache=False, pull=True, args=False):
     docker_client = Client(base_url='unix://var/run/docker.sock')
+
+    if args:
+        mylist=os.environ['DOCKER_BUILDARGS'].split('=')
+        mybuildargs={mylist[0]: mylist[1]}
+    else:
+        mybuildargs=None
 
     return docker_client.build(
         tag=os.environ['DOCKER_IMAGE'],
@@ -41,10 +47,8 @@ def build_docker_image(nocache=False, pull=True):
         pull=pull,
         decode=True,
         forcerm=True,
-        # Allows to invalidate cache for certains steps in Dockerfile
-        # https://github.com/docker/docker/issues/22832
-        buildargs={'CACHE_DATE': datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")},
-        nocache=nocache
+        nocache=nocache,
+        buildargs=mybuildargs
     )
 
 
