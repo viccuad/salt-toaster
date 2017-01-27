@@ -81,8 +81,18 @@ build::
 ifeq ("$(FLAVOR)", "devel")
 	$(eval BUILD_OPTS:=--nopull)
 endif
+ifeq ("$(FLAVOR)", "qam")
+ifndef MAINTNUMBER
+	@echo "Please define MAINTNUMBER variable"
+	exit 1
+endif
+	$(eval BUILD_OPTS:=--nopull --buildargs)
+	DOCKER_IMAGE=$(DOCKER_IMAGE) DOCKER_FILE=$(DOCKER_FILE) DOCKER_BUILDARGS=maintnumber=$(MAINTNUMBER) sandbox/bin/python -m build $(BUILD_OPTS)
+	rm -f docker/salt.archive
+else
 	DOCKER_IMAGE=$(DOCKER_IMAGE) DOCKER_FILE=$(DOCKER_FILE) sandbox/bin/python -m build $(BUILD_OPTS)
 	rm -f docker/salt.archive
+endif
 
 pull_image:
 ifndef NOPULL
